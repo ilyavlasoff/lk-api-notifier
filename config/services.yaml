@@ -1,0 +1,45 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    service_url_base: '%env(SERVICE_URL_BASE)%'
+    service_api_version: '%env(SERVICE_API_VERSION)%'
+
+    rabbit-host: '%env(RABBIT_HOST)%'
+    rabbit-port: '%env(RABBIT_PORT)%'
+    rabbit-user: '%env(RABBIT_USER)%'
+    rabbit-password: '%env(RABBIT_PASSWORD)%'
+    rabbit-vhost: '%env(RABBIT_VHOST)%'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
+
+    App\Service\FcmService:
+        arguments: ['@redjan_ym_fcm.client']
+
+    App\Service\QueryService:
+        arguments: ['@http_client', '@parameter_bag']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
