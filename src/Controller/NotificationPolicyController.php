@@ -72,7 +72,7 @@ class NotificationPolicyController
         $this->entityManager->persist($newDevice);
         $this->entityManager->flush();
 
-        return new JsonResponse(json_encode(['success' => true]));
+        return new JsonResponse(json_encode(['success' => true]), Response::HTTP_OK, [], true);
     }
 
     /**
@@ -97,7 +97,7 @@ class NotificationPolicyController
         $this->entityManager->remove($existingDevice);
         $this->entityManager->flush();
 
-        return new JsonResponse(json_encode(['success' => true]));
+        return new JsonResponse(json_encode(['success' => true]), Response::HTTP_OK, [], true);
     }
 
     /**
@@ -125,7 +125,7 @@ class NotificationPolicyController
         $this->entityManager->persist($receiver);
         $this->entityManager->flush();
 
-        return new JsonResponse(json_encode(['success' => true]));
+        return new JsonResponse(json_encode(['success' => true]), Response::HTTP_OK, [], true);
     }
 
     /**
@@ -150,7 +150,7 @@ class NotificationPolicyController
         }
 
         $this->entityManager->flush();
-        return new JsonResponse(json_encode(['success' => true]));
+        return new JsonResponse(json_encode(['success' => true]), Response::HTTP_OK, [], true);
     }
 
     /**
@@ -169,6 +169,6 @@ class NotificationPolicyController
         $this->entityManager->remove($user);
         $this->entityManager->flush();
 
-        return new JsonResponse(json_encode(['success' => true]));
+        return new JsonResponse(json_encode(['success' => true]), Response::HTTP_OK, [], true);
     }
 }
