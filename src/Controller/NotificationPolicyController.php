@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -58,12 +59,12 @@ class NotificationPolicyController
         }
 
         if(!($user = $this->entityManager->getRepository(Receiver::class)->find($addedDevice->getUser()))) {
-            throw new BadRequestHttpException('User not found');
+            throw new NotFoundHttpException('User not found');
         }
 
         if($this->entityManager->getRepository(UserDevices::class)
             ->findOneBy(['fcmKey' => $addedDevice->getFcmKey()])) {
-            throw new BadRequestHttpException('This fcm key is already exists');
+            throw new ConflictHttpException('This fcm key is already exists');
         }
 
         $newDevice = new UserDevices();
@@ -91,7 +92,7 @@ class NotificationPolicyController
 
         if(!($existingDevice = $this->entityManager->getRepository(UserDevices::class)
             ->findOneBy(['user' => $addedDevice->getUser(), 'fcmKey' => $addedDevice->getFcmKey()]))) {
-            throw new BadRequestHttpException('This fcm key is not belongs to specified user');
+            throw new NotFoundHttpException('This fcm key is not belongs to specified user');
         }
 
         $this->entityManager->remove($existingDevice);
@@ -115,7 +116,7 @@ class NotificationPolicyController
         }
 
         if($this->entityManager->getRepository(Receiver::class)->find($newReceiverData->getId())) {
-            throw new BadRequestHttpException('User is already exists');
+            throw new ConflictHttpException('User is already exists');
         }
 
         $receiver = new Receiver();
@@ -138,7 +139,7 @@ class NotificationPolicyController
         $patchingReceiver = $this->serializer->deserialize($request->getContent(), ReceiverDTO::class, 'json');
 
         if(!($user = $this->entityManager->getRepository(Receiver::class)->find($patchingReceiver->getId()))) {
-            throw new BadRequestHttpException('User not exists');
+            throw new NotFoundHttpException('User not exists');
         }
 
         if(($updateMuteDiscussion = $patchingReceiver->getMuteDiscussion()) !== null) {
@@ -150,7 +151,8 @@ class NotificationPolicyController
         }
 
         $this->entityManager->flush();
-        return new JsonResponse(json_encode(['success' => true]), Response::HTTP_OK, [], true);
+        $serializedUser = $this->serializer->serialize($user, 'json');
+        return new JsonResponse($serializedUser, Response::HTTP_OK, [], true);
     }
 
     /**
@@ -163,12 +165,35 @@ class NotificationPolicyController
         $deletingReceiver = $this->serializer->deserialize($request->getContent(), ReceiverDTO::class, 'json');
 
         if(!($user = $this->entityManager->getRepository(Receiver::class)->find($deletingReceiver->getId()))) {
-            throw new BadRequestHttpException('User not exists');
+            throw new NotFoundHttpException('User not exists');
         }
 
         $this->entityManager->remove($user);
         $this->entityManager->flush();
 
         return new JsonResponse(json_encode(['success' => true]), Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * @param Request $request
+     * @Route("/management/receiver", name="get_receiver", methods={"GET"})
+     * @return JsonResponse
+     */
+    public function getReceiver(Request $request) {
+        $receiverId = $request->query->get('receiver');
+
+        if(!$receiverId) {
+            throw new BadRequestHttpException('Incorrect parameter user');
+        }
+
+        /** @var Receiver $receiver */
+        $receiver = $this->entityManager->getRepository(Receiver::class)->find($receiverId);
+
+        if(!$receiver) {
+            throw new NotFoundHttpException('User not exists');
+        }
+
+        $serializedUser = $this->serializer->serialize($receiver, 'json');
+        return new JsonResponse($serializedUser, Response::HTTP_OK, [], true);
     }
 }

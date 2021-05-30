@@ -51,14 +51,14 @@ class QueryService
             );
 
             if($response->getStatusCode() != Response::HTTP_OK) {
-                throw new \Exception('wrong data');
+                throw new \Exception('Wrong data');
             }
         } catch (TransportExceptionInterface $e) {
             throw new \Exception('Service is unavailable');
         }
 
         try {
-            $membersList = json_decode($response->getContent(false));
+            $membersList = json_decode($response->getContent());
         } catch (ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $e) {
             throw new \Exception('Unable to fetch service response');
         }
