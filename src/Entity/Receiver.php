@@ -34,7 +34,7 @@ class Receiver
 
     /**
      * @var UserDevices[]
-     * @ORM\OneToMany(targetEntity="UserDevices", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="UserDevices", mappedBy="user", cascade={"remove"})
      */
     private $devices;
 

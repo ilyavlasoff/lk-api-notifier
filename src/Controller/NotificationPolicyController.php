@@ -164,12 +164,10 @@ class NotificationPolicyController
         /** @var ReceiverDTO $deletingReceiver */
         $deletingReceiver = $this->serializer->deserialize($request->getContent(), ReceiverDTO::class, 'json');
 
-        if(!($user = $this->entityManager->getRepository(Receiver::class)->find($deletingReceiver->getId()))) {
-            throw new NotFoundHttpException('User not exists');
+        if($user = $this->entityManager->getRepository(Receiver::class)->find($deletingReceiver->getId())) {
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
         }
-
-        $this->entityManager->remove($user);
-        $this->entityManager->flush();
 
         return new JsonResponse(json_encode(['success' => true]), Response::HTTP_OK, [], true);
     }
