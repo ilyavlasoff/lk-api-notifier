@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Model\DTO;
+namespace App\Model\Query;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class UserDeviceDTO
+class UserDeviceQueryParam
 {
     /**
      * @var string | null

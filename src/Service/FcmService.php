@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Model\IFcmSendable;
 use RedjanYm\FCMBundle\FCMClient;
 
 class FcmService
@@ -18,13 +17,14 @@ class FcmService
     }
 
     /**
-     * @param IFcmSendable $message
+     * @param string $notificationTitle
+     * @param string $notificationBody
      * @param string $deviceId
      */
-    public function sendWithDeviceId(IFcmSendable $message, string $deviceId) {
+    public function sendWithDeviceId(string $notificationTitle, string $notificationBody, string $deviceId) {
         $notification = $this->fcmClient->createDeviceNotification();
-        $notification->setTitle($message->getFcmNotificationTitle());
-        $notification->setBody($message->getFcmNotificationBody());
+        $notification->setTitle($notificationTitle);
+        $notification->setBody($notificationBody);
         $notification->setDeviceToken($deviceId);
 
         $this->fcmClient->sendNotification($notification);

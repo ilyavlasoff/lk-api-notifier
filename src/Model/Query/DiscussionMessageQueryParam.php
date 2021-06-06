@@ -1,11 +1,17 @@
 <?php
 
-namespace App\Model;
+namespace App\Model\Query;
 
 use JMS\Serializer\Annotation as JMS;
 
-class CreatedDiscussionMessage implements IRoutable, IFcmSendable
+class DiscussionMessageQueryParam
 {
+    /**
+     * @var string | null
+     * @JMS\Type("string")
+     */
+    private $id;
+
     /**
      * @var string | null
      * @JMS\Type("string")
@@ -28,25 +34,25 @@ class CreatedDiscussionMessage implements IRoutable, IFcmSendable
      * @var string | null
      * @JMS\Type("string")
      */
-    private $authorId;
+    private $senderId;
 
     /**
      * @var string | null
      * @JMS\Type("string")
      */
-    private $authorName;
+    private $senderName;
 
     /**
      * @var string | null
      * @JMS\Type("string")
      */
-    private $authorSurname;
+    private $senderSurname;
 
     /**
      * @var string | null
      * @JMS\Type("string")
      */
-    private $authorPatronymic;
+    private $senderPatronymic;
 
     /**
      * @var string | null
@@ -55,8 +61,8 @@ class CreatedDiscussionMessage implements IRoutable, IFcmSendable
     private $textContent;
 
     /**
-     * @var string | null
-     * @JMS\Type("string")
+     * @var \DateTime
+     * @JMS\Type("datetime")
      */
     private $createdAt;
 
@@ -84,28 +90,20 @@ class CreatedDiscussionMessage implements IRoutable, IFcmSendable
      */
     private $linkContent;
 
-    public function getRoutingKey(): string
+    /**
+     * @return string|null
+     */
+    public function getId(): ?string
     {
-        return "{$this->group}.{$this->discipline}.{$this->semester}";
+        return $this->id;
     }
 
-    public function getExchangeName(): string
+    /**
+     * @param string|null $id
+     */
+    public function setId(?string $id): void
     {
-        return 'discussion_msg';
-    }
-
-    public function getFcmNotificationBody(): string
-    {
-        $shortMessage = substr($this->textContent, 0, 100);
-        if(strlen($shortMessage) < strlen($this->textContent)) {
-            $shortMessage .= '...';
-        }
-        return "{$this->authorName} {$this->authorSurname}: $shortMessage";
-    }
-
-    public function getFcmNotificationTitle(): string
-    {
-        return 'Новое сообщение в обсуждении';
+        $this->id = $id;
     }
 
     /**
@@ -159,65 +157,65 @@ class CreatedDiscussionMessage implements IRoutable, IFcmSendable
     /**
      * @return string|null
      */
-    public function getAuthorId(): ?string
+    public function getSenderId(): ?string
     {
-        return $this->authorId;
+        return $this->senderId;
     }
 
     /**
-     * @param string|null $authorId
+     * @param string|null $senderId
      */
-    public function setAuthorId(?string $authorId): void
+    public function setSenderId(?string $senderId): void
     {
-        $this->authorId = $authorId;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getAuthorName(): ?string
-    {
-        return $this->authorName;
-    }
-
-    /**
-     * @param string|null $authorName
-     */
-    public function setAuthorName(?string $authorName): void
-    {
-        $this->authorName = $authorName;
+        $this->senderId = $senderId;
     }
 
     /**
      * @return string|null
      */
-    public function getAuthorSurname(): ?string
+    public function getSenderName(): ?string
     {
-        return $this->authorSurname;
+        return $this->senderName;
     }
 
     /**
-     * @param string|null $authorSurname
+     * @param string|null $senderName
      */
-    public function setAuthorSurname(?string $authorSurname): void
+    public function setSenderName(?string $senderName): void
     {
-        $this->authorSurname = $authorSurname;
+        $this->senderName = $senderName;
     }
 
     /**
      * @return string|null
      */
-    public function getAuthorPatronymic(): ?string
+    public function getSenderSurname(): ?string
     {
-        return $this->authorPatronymic;
+        return $this->senderSurname;
     }
 
     /**
-     * @param string|null $authorPatronymic
+     * @param string|null $senderSurname
      */
-    public function setAuthorPatronymic(?string $authorPatronymic): void
+    public function setSenderSurname(?string $senderSurname): void
     {
-        $this->authorPatronymic = $authorPatronymic;
+        $this->senderSurname = $senderSurname;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSenderPatronymic(): ?string
+    {
+        return $this->senderPatronymic;
+    }
+
+    /**
+     * @param string|null $senderPatronymic
+     */
+    public function setSenderPatronymic(?string $senderPatronymic): void
+    {
+        $this->senderPatronymic = $senderPatronymic;
     }
 
     /**
@@ -237,17 +235,17 @@ class CreatedDiscussionMessage implements IRoutable, IFcmSendable
     }
 
     /**
-     * @return string|null
+     * @return \DateTime
      */
-    public function getCreatedAt(): ?string
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
     /**
-     * @param string|null $createdAt
+     * @param \DateTime $createdAt
      */
-    public function setCreatedAt(?string $createdAt): void
+    public function setCreatedAt(\DateTime $createdAt): void
     {
         $this->createdAt = $createdAt;
     }

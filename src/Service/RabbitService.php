@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Model\IRoutable;
 use JMS\Serializer\SerializerInterface;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -66,10 +65,10 @@ class RabbitService
             false);
     }
 
-    public function produce(IRoutable $messageObject)
+    public function produce($messageObject, string $exchangeName, string $routingKey)
     {
         $data = $this->serializer->serialize($messageObject, 'json');
         $message = new AMQPMessage($data);
-        $this->channel->basic_publish($message, $messageObject->getExchangeName(), $messageObject->getRoutingKey());
+        $this->channel->basic_publish($message, $exchangeName, $routingKey);
     }
 }

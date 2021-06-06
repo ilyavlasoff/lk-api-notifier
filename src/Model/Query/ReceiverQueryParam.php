@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Model\DTO;
+namespace App\Model\Query;
 use App\Entity\Receiver;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ReceiverDTO
+class ReceiverQueryParam
 {
     /**
      * @var string | null

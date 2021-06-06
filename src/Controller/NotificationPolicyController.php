@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Receiver;
 use App\Entity\UserDevices;
-use App\Model\DTO\ReceiverDTO;
-use App\Model\DTO\UserDeviceDTO;
+use App\Model\Query\ReceiverQueryParam;
+use App\Model\Query\UserDeviceQueryParam;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,8 +50,8 @@ class NotificationPolicyController
      * @Route("/management/device", name="add_device", methods={"POST"})
      */
     public function addDevice(Request $request) {
-        /** @var UserDeviceDTO $addedDevice */
-        $addedDevice = $this->serializer->deserialize($request->getContent(), UserDeviceDTO::class, 'json');
+        /** @var UserDeviceQueryParam $addedDevice */
+        $addedDevice = $this->serializer->deserialize($request->getContent(), UserDeviceQueryParam::class, 'json');
 
         $errors = $this->validator->validate($addedDevice);
         if(count($errors)) {
@@ -82,8 +82,8 @@ class NotificationPolicyController
      * @Route("/management/device", name="remove_device", methods={"DELETE"})
      */
     public function removeDevice(Request $request) {
-        /** @var UserDeviceDTO $addedDevice */
-        $addedDevice = $this->serializer->deserialize($request->getContent(), UserDeviceDTO::class, 'json');
+        /** @var UserDeviceQueryParam $addedDevice */
+        $addedDevice = $this->serializer->deserialize($request->getContent(), UserDeviceQueryParam::class, 'json');
 
         $errors = $this->validator->validate($addedDevice);
         if(count($errors)) {
@@ -107,8 +107,8 @@ class NotificationPolicyController
      * @return JsonResponse
      */
     public function addReceiver(Request $request) {
-        /** @var ReceiverDTO $newReceiverData */
-        $newReceiverData = $this->serializer->deserialize($request->getContent(), ReceiverDTO::class, 'json');
+        /** @var ReceiverQueryParam $newReceiverData */
+        $newReceiverData = $this->serializer->deserialize($request->getContent(), ReceiverQueryParam::class, 'json');
 
         $errors = $this->validator->validate($newReceiverData);
         if(count($errors)) {
@@ -135,8 +135,8 @@ class NotificationPolicyController
      * @return JsonResponse
      */
     public function updateReceiver(Request $request) {
-        /** @var ReceiverDTO $patchingReceiver */
-        $patchingReceiver = $this->serializer->deserialize($request->getContent(), ReceiverDTO::class, 'json');
+        /** @var ReceiverQueryParam $patchingReceiver */
+        $patchingReceiver = $this->serializer->deserialize($request->getContent(), ReceiverQueryParam::class, 'json');
 
         if(!($user = $this->entityManager->getRepository(Receiver::class)->find($patchingReceiver->getId()))) {
             throw new NotFoundHttpException('User not exists');
@@ -161,8 +161,8 @@ class NotificationPolicyController
      * @return JsonResponse
      */
     public function deleteReceiver(Request $request) {
-        /** @var ReceiverDTO $deletingReceiver */
-        $deletingReceiver = $this->serializer->deserialize($request->getContent(), ReceiverDTO::class, 'json');
+        /** @var ReceiverQueryParam $deletingReceiver */
+        $deletingReceiver = $this->serializer->deserialize($request->getContent(), ReceiverQueryParam::class, 'json');
 
         if($user = $this->entityManager->getRepository(Receiver::class)->find($deletingReceiver->getId())) {
             $this->entityManager->remove($user);
