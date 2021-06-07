@@ -74,7 +74,7 @@ class PrivateMessageQueryParam
 
     /**
      * @var \DateTime
-     * @JMS\Type("datetime")
+     * @JMS\Type("DateTime<'y-m-d H:i:s'>")
      */
     private $createdAt;
 
