@@ -5,17 +5,17 @@ namespace App\Model\DTO;
 class PrivateMessage
 {
     /**
-     * @var string
+     * @var string | null
      */
     private $id;
 
     /**
-     * @var string
+     * @var string | null
      */
     private $chat;
 
     /**
-     * @var \App\Model\Query\Person
+     * @var Person | null
      */
     private $sender;
 
@@ -30,7 +30,7 @@ class PrivateMessage
     private $messageText;
 
     /**
-     * @var \DateTime
+     * @var \DateTime | null
      */
     private $sendTime;
 
@@ -40,59 +40,59 @@ class PrivateMessage
     private $isRead;
 
     /**
-     * @var \App\Model\Query\ExternalLink[]
+     * @var ExternalLink[] | null
      */
     private $links;
 
     /**
-     * @var \App\Model\Query\Attachment[]
+     * @var Attachment[] | null
      */
     private $attachments;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }
 
     /**
-     * @param string $id
+     * @param string|null $id
      */
-    public function setId(string $id): void
+    public function setId(?string $id): void
     {
         $this->id = $id;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getChat(): string
+    public function getChat(): ?string
     {
         return $this->chat;
     }
 
     /**
-     * @param string $chat
+     * @param string|null $chat
      */
-    public function setChat(string $chat): void
+    public function setChat(?string $chat): void
     {
         $this->chat = $chat;
     }
 
     /**
-     * @return \App\Model\Query\Person
+     * @return Person|null
      */
-    public function getSender(): Person
+    public function getSender(): ?Person
     {
         return $this->sender;
     }
 
     /**
-     * @param \App\Model\Query\Person $sender
+     * @param Person|null $sender
      */
-    public function setSender(Person $sender): void
+    public function setSender(?Person $sender): void
     {
         $this->sender = $sender;
     }
@@ -130,17 +130,17 @@ class PrivateMessage
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getSendTime(): \DateTime
+    public function getSendTime(): ?\DateTime
     {
         return $this->sendTime;
     }
 
     /**
-     * @param \DateTime $sendTime
+     * @param \DateTime|null $sendTime
      */
-    public function setSendTime(\DateTime $sendTime): void
+    public function setSendTime(?\DateTime $sendTime): void
     {
         $this->sendTime = $sendTime;
     }
@@ -162,33 +162,33 @@ class PrivateMessage
     }
 
     /**
-     * @return \App\Model\Query\ExternalLink[]
+     * @return ExternalLink[]|null
      */
-    public function getLinks(): array
+    public function getLinks(): ?array
     {
         return $this->links;
     }
 
     /**
-     * @param \App\Model\Query\ExternalLink[] $links
+     * @param ExternalLink[]|null $links
      */
-    public function setLinks(array $links): void
+    public function setLinks(?array $links): void
     {
         $this->links = $links;
     }
 
     /**
-     * @return \App\Model\Query\Attachment[]
+     * @return Attachment[]|null
      */
-    public function getAttachments(): array
+    public function getAttachments(): ?array
     {
         return $this->attachments;
     }
 
     /**
-     * @param \App\Model\Query\Attachment[] $attachments
+     * @param Attachment[]|null $attachments
      */
-    public function setAttachments(array $attachments): void
+    public function setAttachments(?array $attachments): void
     {
         $this->attachments = $attachments;
     }

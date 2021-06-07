@@ -124,11 +124,6 @@ class DataRequestController extends AbstractController
         $dialog = new Dialog();
         $dialog->setId($createdDialog->getDialogId());
 
-        $lastMessage = new PrivateMessage();
-        $lastMessage->setMessageText($createdDialog->getLastMessageText());
-        $lastMessage->setId($createdDialog->getLastMessageId());
-        $lastMessage->setSendTime($createdDialog->getLastSendTime());
-
         $member1 = new Person();
         $member1->setUoid($createdDialog->getMember1Id());
         $member1->setFname($createdDialog->getMember1Name());
@@ -141,13 +136,21 @@ class DataRequestController extends AbstractController
         $member2->setLname($createdDialog->getMember2Surname());
         $member2->setPatronymic($createdDialog->getMember2Patronymic());
 
-        if($createdDialog->getLastAuthor() === $createdDialog->getMember1Id()) {
-            $lastMessage->setSender($member1);
-        } elseif ($createdDialog->getLastAuthor() === $createdDialog->getMember2Id()) {
-            $lastMessage->setSender($member2);
-        }
+        if($createdDialog->getLastMessageId()) {
+            $lastMessage = new PrivateMessage();
+            $lastMessage->setMessageText($createdDialog->getLastMessageText());
+            $lastMessage->setId($createdDialog->getLastMessageId());
+            $lastMessage->setSendTime($createdDialog->getLastSendTime());
 
-        $dialog->setLastMessage($lastMessage);
+
+            if ($createdDialog->getLastAuthor() === $createdDialog->getMember1Id()) {
+                $lastMessage->setSender($member1);
+            } elseif ($createdDialog->getLastAuthor() === $createdDialog->getMember2Id()) {
+                $lastMessage->setSender($member2);
+            }
+
+            $dialog->setLastMessage($lastMessage);
+        }
 
         $dialog->setCompanion($member2);
         $dialog->setUnreadCount($createdDialog->getUnread1Count());

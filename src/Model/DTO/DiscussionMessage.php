@@ -5,7 +5,7 @@ namespace App\Model\DTO;
 class DiscussionMessage
 {
     /**
-     * @var string
+     * @var string | null
      */
     private $id;
 
@@ -25,7 +25,7 @@ class DiscussionMessage
     private $semester;
 
     /**
-     * @var Person
+     * @var Person | null
      */
     private $sender;
 
@@ -40,109 +40,29 @@ class DiscussionMessage
     private $msg;
 
     /**
-     * @var Attachment[]
+     * @var Attachment[] | null
      */
     private $attachments;
 
     /**
-     * @var ExternalLink[]
+     * @var ExternalLink[] | null
      */
     private $externalLinks;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }
 
     /**
-     * @param string $id
+     * @param string|null $id
      */
-    public function setId(string $id): void
+    public function setId(?string $id): void
     {
         $this->id = $id;
-    }
-
-    /**
-     * @return \App\Model\DTO\Person
-     */
-    public function getSender(): Person
-    {
-        return $this->sender;
-    }
-
-    /**
-     * @param \App\Model\DTO\Person $sender
-     */
-    public function setSender(Person $sender): void
-    {
-        $this->sender = $sender;
-    }
-
-    /**
-     * @return \DateTime|null
-     */
-    public function getCreated(): ?\DateTime
-    {
-        return $this->created;
-    }
-
-    /**
-     * @param \DateTime|null $created
-     */
-    public function setCreated(?\DateTime $created): void
-    {
-        $this->created = $created;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getMsg(): ?string
-    {
-        return $this->msg;
-    }
-
-    /**
-     * @param string|null $msg
-     */
-    public function setMsg(?string $msg): void
-    {
-        $this->msg = $msg;
-    }
-
-    /**
-     * @return Attachment[]
-     */
-    public function getAttachments(): array
-    {
-        return $this->attachments;
-    }
-
-    /**
-     * @param Attachment[] $attachments
-     */
-    public function setAttachments(array $attachments): void
-    {
-        $this->attachments = $attachments;
-    }
-
-    /**
-     * @return ExternalLink[]
-     */
-    public function getExternalLinks(): array
-    {
-        return $this->externalLinks;
-    }
-
-    /**
-     * @param ExternalLink[] $externalLinks
-     */
-    public function setExternalLinks(array $externalLinks): void
-    {
-        $this->externalLinks = $externalLinks;
     }
 
     /**
@@ -191,6 +111,86 @@ class DiscussionMessage
     public function setSemester(?string $semester): void
     {
         $this->semester = $semester;
+    }
+
+    /**
+     * @return Person|null
+     */
+    public function getSender(): ?Person
+    {
+        return $this->sender;
+    }
+
+    /**
+     * @param Person|null $sender
+     */
+    public function setSender(?Person $sender): void
+    {
+        $this->sender = $sender;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getCreated(): ?\DateTime
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param \DateTime|null $created
+     */
+    public function setCreated(?\DateTime $created): void
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMsg(): ?string
+    {
+        return $this->msg;
+    }
+
+    /**
+     * @param string|null $msg
+     */
+    public function setMsg(?string $msg): void
+    {
+        $this->msg = $msg;
+    }
+
+    /**
+     * @return Attachment[]|null
+     */
+    public function getAttachments(): ?array
+    {
+        return $this->attachments;
+    }
+
+    /**
+     * @param Attachment[]|null $attachments
+     */
+    public function setAttachments(?array $attachments): void
+    {
+        $this->attachments = $attachments;
+    }
+
+    /**
+     * @return ExternalLink[]|null
+     */
+    public function getExternalLinks(): ?array
+    {
+        return $this->externalLinks;
+    }
+
+    /**
+     * @param ExternalLink[]|null $externalLinks
+     */
+    public function setExternalLinks(?array $externalLinks): void
+    {
+        $this->externalLinks = $externalLinks;
     }
 
 }
