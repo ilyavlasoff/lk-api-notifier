@@ -8,4 +8,5 @@
 /var/
 /vendor/
 /docker/rabbit/data/
+.idea/
 ###< symfony/framework-bundle ###
