@@ -37,28 +37,35 @@ class RabbitService
         $this->channel = $this->connection->channel();
 
         $this->channel->exchange_declare(
-            'private_msg',
+            'private-created',
             'topic',
             false,
             true,
             false);
 
         $this->channel->exchange_declare(
-            'discussion_msg',
+            'private-changed',
             'topic',
             false,
             true,
             false);
 
         $this->channel->exchange_declare(
-            'dialog',
+            'discussion-created',
             'topic',
             false,
             true,
             false);
 
         $this->channel->exchange_declare(
-            'read-event',
+            'discussion-changed',
+            'topic',
+            false,
+            true,
+            false);
+
+        $this->channel->exchange_declare(
+            'dialog-created',
             'topic',
             false,
             true,

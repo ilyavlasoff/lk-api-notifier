@@ -49,10 +49,10 @@ class DataRequestController extends AbstractController
 
     /**
      * @param Request $request
-     * @Route("/msg-read", name="message_read", methods={"POST"})
+     * @Route("/private", name="private_changed", methods={"PATCH"})
      * @return Response
      */
-    public function notifyCompanionRead(Request $request) {
+    public function notifyPrivateMessageChanged(Request $request) {
         /** @var PrivateMessageQueryParam $readEvent */
         $readEvent = $this->serializer->deserialize(
             $request->getContent(),
@@ -92,7 +92,7 @@ class DataRequestController extends AbstractController
 
         $this->rabbitService->produce(
             $privateMessage,
-            'read-event',
+            'private-changed',
             "{$privateMessage->getChat()}.{$readEvent->getMember1()}"
         );
 
@@ -101,7 +101,7 @@ class DataRequestController extends AbstractController
 
         $this->rabbitService->produce(
             $privateMessage,
-            'read-event',
+            'private-changed',
             "{$privateMessage->getChat()}.{$readEvent->getMember2()}"
         );
 
@@ -110,10 +110,10 @@ class DataRequestController extends AbstractController
 
     /**
      * @param Request $request
-     * @Route("/dialog-created", name="dialog_created", methods={"POST"})
+     * @Route("/dialog", name="dialog_created", methods={"POST"})
      * @return Response
      */
-    public function notifyCreatedDialog(Request $request) {
+    public function notifyDialogCreated(Request $request) {
         /** @var DialogCreateQueryParam $createdDialog */
         $createdDialog = $this->serializer->deserialize(
             $request->getContent(),
@@ -156,13 +156,13 @@ class DataRequestController extends AbstractController
         $dialog->setUnreadCount($createdDialog->getUnread1Count());
         $dialog->setHasUnread($createdDialog->getUnread1Count() == 0);
 
-        $this->rabbitService->produce($dialog, 'dialog', $member1->getUoid());
+        $this->rabbitService->produce($dialog, 'dialog-created', $member1->getUoid());
 
         $dialog->setCompanion($member1);
         $dialog->setUnreadCount($createdDialog->getUnread2Count());
         $dialog->setHasUnread($createdDialog->getUnread2Count() == 0);
 
-        $this->rabbitService->produce($dialog, 'dialog', $member2->getUoid());
+        $this->rabbitService->produce($dialog, 'dialog-created', $member2->getUoid());
 
         return new Response();
     }
@@ -174,9 +174,9 @@ class DataRequestController extends AbstractController
      * @param FcmService $fcmService
      * @return Response
      * @throws Exception
-     * @Route("/discussion-msg-created", name="discussion_created", methods={"POST"})
+     * @Route("/discussion", name="discussion_created", methods={"POST"})
      */
-    public function notifyCreatedDiscussionMessage(
+    public function notifyDiscussionMessageCreated(
         Request $request,
         EntityManagerInterface $entityManager,
         QueryService $queryService,
@@ -220,7 +220,7 @@ class DataRequestController extends AbstractController
 
         $this->rabbitService->produce(
             $discussionMessage,
-            'discussion_msg',
+            'discussion-created',
             $createdDiscussionMessage->getGroup()
         );
 
@@ -247,12 +247,64 @@ class DataRequestController extends AbstractController
 
     /**
      * @param Request $request
+     * @Route("/discussion", name="discussion_changed", methods={"PATCH"})
+     */
+    public function notifyDiscussionMessageChanged(Request $request) {
+        /** @var DiscussionMessageQueryParam $createdDiscussionMessage */
+        $createdDiscussionMessage = $this->serializer->deserialize(
+            $request->getContent(),
+            DiscussionMessageQueryParam::class,
+            'json'
+        );
+
+        $discussionMessage = new DiscussionMessage();
+        $discussionMessage->setId($createdDiscussionMessage->getId());
+        $discussionMessage->setGroup($createdDiscussionMessage->getGroup());
+        $discussionMessage->setDiscipline($createdDiscussionMessage->getDiscipline());
+        $discussionMessage->setSemester($createdDiscussionMessage->getSemester());
+        $discussionMessage->setCreated($createdDiscussionMessage->getCreatedAt());
+        $discussionMessage->setMsg($createdDiscussionMessage->getTextContent());
+
+        $person = new Person();
+        $person->setUoid($createdDiscussionMessage->getSenderId());
+        $person->setFname($createdDiscussionMessage->getSenderName());
+        $person->setLname($createdDiscussionMessage->getSenderSurname());
+        $person->setPatronymic($createdDiscussionMessage->getSenderPatronymic());
+        $discussionMessage->setSender($person);
+
+        if($createdDiscussionMessage->getDocSize() || $createdDiscussionMessage->getDocName()) {
+            $attachment = new Attachment();
+            $attachment->setAttachmentSize($createdDiscussionMessage->getDocSize());
+            $attachment->setAttachmentName($createdDiscussionMessage->getDocName());
+            $discussionMessage->setAttachments([$attachment]);
+        }
+
+        if($createdDiscussionMessage->getLinkText() || $createdDiscussionMessage->getLinkContent()) {
+            $externalLink = new ExternalLink();
+            $externalLink->setLinkText($createdDiscussionMessage->getLinkText());
+            $externalLink->setLinkContent($createdDiscussionMessage->getLinkContent());
+            $discussionMessage->setExternalLinks([$externalLink]);
+        }
+
+        $this->rabbitService->produce(
+            $discussionMessage,
+            'discussion-changed',
+            $createdDiscussionMessage->getGroup()
+        );
+    }
+
+    /**
+     * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param FcmService $fcmService
      * @return Response
-     * @Route("/message-created", name="message_created", methods={"POST"})
+     * @Route("/private", name="message_created", methods={"POST"})
      */
-    public function notifyCreatedMessage(Request $request, EntityManagerInterface $entityManager, FcmService $fcmService) {
+    public function notifyPrivateMessageCreated(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        FcmService $fcmService
+    ) {
         /** @var PrivateMessageQueryParam $createdPrivateMessage */
         $createdPrivateMessage = $this->serializer->deserialize(
             $request->getContent(),
@@ -292,7 +344,7 @@ class DataRequestController extends AbstractController
 
         $this->rabbitService->produce(
             $privateMessage,
-            'private_msg',
+            'private-created',
             "{$privateMessage->getChat()}.{$createdPrivateMessage->getMember1()}"
         );
 
@@ -301,7 +353,7 @@ class DataRequestController extends AbstractController
 
         $this->rabbitService->produce(
             $privateMessage,
-            'private_msg',
+            'private-created',
             "{$privateMessage->getChat()}.{$createdPrivateMessage->getMember2()}"
         );
 
