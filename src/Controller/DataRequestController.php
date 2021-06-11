@@ -49,7 +49,7 @@ class DataRequestController extends AbstractController
 
     /**
      * @param Request $request
-     * @Route("/private", name="private_changed", methods={"PATCH"})
+     * @Route("/private/change", name="private_changed", methods={"POST"})
      * @return Response
      */
     public function notifyPrivateMessageChanged(Request $request) {
@@ -110,7 +110,7 @@ class DataRequestController extends AbstractController
 
     /**
      * @param Request $request
-     * @Route("/dialog", name="dialog_created", methods={"POST"})
+     * @Route("/dialog/add", name="dialog_created", methods={"POST"})
      * @return Response
      */
     public function notifyDialogCreated(Request $request) {
@@ -174,7 +174,7 @@ class DataRequestController extends AbstractController
      * @param FcmService $fcmService
      * @return Response
      * @throws Exception
-     * @Route("/discussion", name="discussion_created", methods={"POST"})
+     * @Route("/discussion/add", name="discussion_created", methods={"POST"})
      */
     public function notifyDiscussionMessageCreated(
         Request $request,
@@ -247,7 +247,7 @@ class DataRequestController extends AbstractController
 
     /**
      * @param Request $request
-     * @Route("/discussion", name="discussion_changed", methods={"PATCH"})
+     * @Route("/discussion/change", name="discussion_changed", methods={"POST"})
      */
     public function notifyDiscussionMessageChanged(Request $request) {
         /** @var DiscussionMessageQueryParam $createdDiscussionMessage */
@@ -298,7 +298,7 @@ class DataRequestController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @param FcmService $fcmService
      * @return Response
-     * @Route("/private", name="message_created", methods={"POST"})
+     * @Route("/private/add", name="message_created", methods={"POST"})
      */
     public function notifyPrivateMessageCreated(
         Request $request,
