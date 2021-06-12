@@ -62,16 +62,14 @@ class NotificationPolicyController
             throw new NotFoundHttpException('User not found');
         }
 
-        if($this->entityManager->getRepository(UserDevices::class)
+        if(!$this->entityManager->getRepository(UserDevices::class)
             ->findOneBy(['fcmKey' => $addedDevice->getFcmKey()])) {
-            throw new ConflictHttpException('This fcm key is already exists');
+            $newDevice = new UserDevices();
+            $newDevice->setUser($user);
+            $newDevice->setFcmKey($addedDevice->getFcmKey());
+            $this->entityManager->persist($newDevice);
+            $this->entityManager->flush();
         }
-
-        $newDevice = new UserDevices();
-        $newDevice->setUser($user);
-        $newDevice->setFcmKey($addedDevice->getFcmKey());
-        $this->entityManager->persist($newDevice);
-        $this->entityManager->flush();
 
         return new JsonResponse(json_encode(['success' => true]), Response::HTTP_OK, [], true);
     }
