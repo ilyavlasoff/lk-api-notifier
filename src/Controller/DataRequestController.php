@@ -248,6 +248,7 @@ class DataRequestController extends AbstractController
     /**
      * @param Request $request
      * @Route("/discussion/change", name="discussion_changed", methods={"POST"})
+     * @return Response
      */
     public function notifyDiscussionMessageChanged(Request $request) {
         /** @var DiscussionMessageQueryParam $createdDiscussionMessage */
@@ -291,6 +292,8 @@ class DataRequestController extends AbstractController
             'discussion-changed',
             $createdDiscussionMessage->getGroup()
         );
+
+        return new Response();
     }
 
     /**
